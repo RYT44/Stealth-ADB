@@ -1,0 +1,15 @@
+{
+  "version": "1.0.0",
+  "rules": [
+    "*://*.doubleclick.net/*",
+    "*://*.googlesyndication.com/*",
+    "*://*.youtube.com/pagead/*",
+    "*://*.youtube.com/api/stats/*",
+    "*://*.ytimg.com/*ad*"
+  ],
+  "scriptlets": {
+    "blockAdDivs": {
+      "code": "document.querySelectorAll('[id*=ad], [class*=ad]').forEach(el => el.remove());"
+    }
+  }
+}
