@@ -1,6 +1,24 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "rules": [
+    {
+      "id": 5,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://www.youtube.com/get_video_info?*adformat=*",
+        "resourceTypes": ["xmlhttprequest"]
+      }
+    },
+    {
+      "id": 6,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://www.youtube.com/annotations_invideo?*adformat=*",
+        "resourceTypes": ["xmlhttprequest"]
+      }
+    },
     {
       "id": 1,
       "priority": 1,
