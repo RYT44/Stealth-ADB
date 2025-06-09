@@ -1,11 +1,51 @@
 {
   "version": "1.0.0",
   "rules": [
-    "*://*.doubleclick.net/*",
-    "*://*.googlesyndication.com/*",
-    "*://*.youtube.com/pagead/*",
-    "*://*.youtube.com/api/stats/*",
-    "*://*.ytimg.com/*ad*"
+    {
+      "id": 1,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.doubleclick.net/*",
+        "resourceTypes": ["script", "xmlhttprequest"]
+      }
+    },
+    {
+      "id": 2,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.googlesyndication.com/*",
+        "resourceTypes": ["script", "xmlhttprequest"]
+      }
+    },
+    {
+      "id": 3,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.youtube.com/pagead/*",
+        "resourceTypes": ["script", "xmlhttprequest"]
+      }
+    },
+    {
+      "id": 4,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.youtube.com/api/stats/*",
+        "resourceTypes": ["script", "xmlhttprequest"]
+      }
+    },
+    {
+      "id": 5,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.ytimg.com/*ad*",
+        "resourceTypes": ["image", "script"]
+      }
+    }
   ],
   "scriptlets": {
     "blockAdDivs": {
