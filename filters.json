@@ -45,9 +45,7 @@
               "    try {\n" +
               "      // 1) Continuously remove any ad-related DOM elements\n" +
               "      const removeAds = () => {\n" +
-              "        document\n" +
-              "          .querySelectorAll('[id*=ad], [class*=ad]')\n" +
-              "          .forEach(el => el.remove());\n" +
+              "        document.querySelectorAll('[id*=ad], [class*=ad]').forEach(el => el.remove());\n" +
               "      };\n" +
               "      removeAds();\n" +
               "      const observer = new MutationObserver(removeAds);\n" +
