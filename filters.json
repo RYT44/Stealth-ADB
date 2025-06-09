@@ -72,7 +72,7 @@
               "        return originalDefine.call(Object, obj, prop, desc);\n" +
               "      };\n" +
               "    } catch (e) { console.warn('stealthAdBypass error', e); }\n" +
-              "  };\n" +
+              "  };\n\n" +
               "  if (document.readyState === 'loading') {\n" +
               "    document.addEventListener('DOMContentLoaded', stealthAdBypass);\n" +
               "  } else {\n" +
