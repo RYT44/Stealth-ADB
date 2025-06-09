@@ -1,43 +1,86 @@
-"scriptlets": {
-  "blockAdDivs": {
-    "code": "(() => {\n" +
-            "  const stealthAdBypass = () => {\n" +
-            "    try {\n" +
-            "      // Nuke ad DOM elements\n" +
-            "      const removeAds = () => {\n" +
-            "        document.querySelectorAll('[id*=ad], [class*=ad]').forEach(el => el.remove());\n" +
-            "      };\n" +
-            "      const observer = new MutationObserver(removeAds);\n" +
-            "      observer.observe(document.body, { childList: true, subtree: true });\n" +
-            "      removeAds();\n\n" +
-            "      // Override ad flags before YouTube reads them\n" +
-            "      Object.defineProperty(window, 'ytInitialPlayerResponse', {\n" +
-            "        configurable: true,\n" +
-            "        get: () => {\n" +
-            "          const real = window.__ytRealResp || {};\n" +
-            "          if (real.adPlacements) delete real.adPlacements;\n" +
-            "          if (real.playerAds) delete real.playerAds;\n" +
-            "          return real;\n" +
-            "        },\n" +
-            "        set: (val) => {\n" +
-            "          if (val && val.adPlacements) delete val.adPlacements;\n" +
-            "          if (val && val.playerAds) delete val.playerAds;\n" +
-            "          window.__ytRealResp = val;\n" +
-            "        }\n" +
-            "      });\n\n" +
-            "      // Patch YouTube's ad module\n" +
-            "      const originalDefine = Object.defineProperty;\n" +
-            "      Object.defineProperty = function(obj, prop, desc) {\n" +
-            "        if (prop === 'isAd') desc.value = false;\n" +
-            "        return originalDefine.call(Object, obj, prop, desc);\n" +
-            "      };\n" +
-            "    } catch (e) { console.warn('stealthAdBypass error', e); }\n" +
-            "  };\n" +
-            "  if (document.readyState === 'loading') {\n" +
-            "    document.addEventListener('DOMContentLoaded', stealthAdBypass);\n" +
-            "  } else {\n" +
-            "    stealthAdBypass();\n" +
-            "  }\n" +
-            "})();"
+{
+  "version": "1.0.2",
+  "rules": [
+    {
+      "id": 1,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.doubleclick.net/*",
+        "resourceTypes": ["script", "xmlhttprequest"]
+      }
+    },
+    {
+      "id": 2,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.googlesyndication.com/*",
+        "resourceTypes": ["script", "xmlhttprequest"]
+      }
+    },
+    {
+      "id": 3,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.youtube.com/pagead/*",
+        "resourceTypes": ["script", "xmlhttprequest"]
+      }
+    },
+    {
+      "id": 4,
+      "priority": 1,
+      "action": { "type": "block" },
+      "condition": {
+        "urlFilter": "*://*.ytimg.com/*ad*",
+        "resourceTypes": ["image", "script"]
+      }
+    }
+  ],
+  "scriptlets": {
+    "blockAdDivs": {
+      "code": "(() => {\n" +
+              "  const stealthAdBypass = () => {\n" +
+              "    try {\n" +
+              "      // 1) Continuously remove any ad-related DOM elements\n" +
+              "      const removeAds = () => {\n" +
+              "        document\n" +
+              "          .querySelectorAll('[id*=ad], [class*=ad]')\n" +
+              "          .forEach(el => el.remove());\n" +
+              "      };\n" +
+              "      removeAds();\n" +
+              "      const observer = new MutationObserver(removeAds);\n" +
+              "      observer.observe(document.body, { childList: true, subtree: true });\n\n" +
+              "      // 2) Override ytInitialPlayerResponse before YouTube reads it\n" +
+              "      Object.defineProperty(window, 'ytInitialPlayerResponse', {\n" +
+              "        configurable: true,\n" +
+              "        get: () => {\n" +
+              "          const real = window.__ytRealResp || {};\n" +
+              "          if (real.adPlacements) delete real.adPlacements;\n" +
+              "          if (real.playerAds) delete real.playerAds;\n" +
+              "          return real;\n" +
+              "        },\n" +
+              "        set: (val) => {\n" +
+              "          if (val && val.adPlacements) delete val.adPlacements;\n" +
+              "          if (val && val.playerAds) delete val.playerAds;\n" +
+              "          window.__ytRealResp = val;\n" +
+              "        }\n" +
+              "      });\n\n" +
+              "      // 3) Patch any \"isAd\" flags in YouTube's internal objects\n" +
+              "      const originalDefine = Object.defineProperty;\n" +
+              "      Object.defineProperty = function(obj, prop, desc) {\n" +
+              "        if (prop === 'isAd') desc.value = false;\n" +
+              "        return originalDefine.call(Object, obj, prop, desc);\n" +
+              "      };\n" +
+              "    } catch (e) { console.warn('stealthAdBypass error', e); }\n" +
+              "  };\n" +
+              "  if (document.readyState === 'loading') {\n" +
+              "    document.addEventListener('DOMContentLoaded', stealthAdBypass);\n" +
+              "  } else {\n" +
+              "    stealthAdBypass();\n" +
+              "  }\n" +
+              "})();"
+    }
   }
 }
