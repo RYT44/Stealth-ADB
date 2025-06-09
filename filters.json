@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.0.1",
   "rules": [
     {
       "id": 1,
@@ -33,23 +33,30 @@
       "priority": 1,
       "action": { "type": "block" },
       "condition": {
-        "urlFilter": "*://*.youtube.com/api/stats/*",
-        "resourceTypes": ["script", "xmlhttprequest"]
-      }
-    },
-    {
-      "id": 5,
-      "priority": 1,
-      "action": { "type": "block" },
-      "condition": {
         "urlFilter": "*://*.ytimg.com/*ad*",
         "resourceTypes": ["image", "script"]
       }
     }
+    // Note: we removed "youtube.com/api/stats/*" to avoid detection
   ],
   "scriptlets": {
     "blockAdDivs": {
-      "code": "document.querySelectorAll('[id*=ad], [class*=ad]').forEach(el => el.remove());"
+      "code": "(() => {\n" +
+              "  // Remove visual ad containers\n" +
+              "  document.querySelectorAll('[id*=ad], [class*=ad]').forEach(el => el.remove());\n\n" +
+              "  // Fake ytInitialPlayerResponse to strip ads before YouTube sees them\n" +
+              "  Object.defineProperty(window, 'ytInitialPlayerResponse', {\n" +
+              "    configurable: true,\n" +
+              "    get: () => {\n" +
+              "      const real = window.__realYTPR || {};\n" +
+              "      if (real.adPlacements) delete real.adPlacements;\n" +
+              "      return real;\n" +
+              "    },\n" +
+              "    set: (val) => {\n" +
+              "      window.__realYTPR = val;\n" +
+              "    }\n" +
+              "  });\n" +
+              "})();"
     }
   }
 }
